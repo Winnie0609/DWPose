@@ -22,7 +22,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     video_path = os.path.join(args.folder, "video.mp4")
-    fps = args.fps
+    fps = int(args.fps)
 
     if not os.path.exists(video_path):
         raise ValueError(f"Path: {args.video_path} not exists")
