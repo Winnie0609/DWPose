@@ -28,6 +28,9 @@ if __name__ == "__main__":
     if not os.path.exists(video_path):
         raise ValueError(f"Path: {args.video_path} not exists")
 
+    print('[fps]', fps)
+    print('[video_path]', video_path)
+    print('Start!')
     detector = DWposeDetector()
     frames = read_frames(video_path)    
     slice_frame = int(fps*4)
@@ -46,5 +49,5 @@ if __name__ == "__main__":
         result = Image.fromarray(result)
         kps_results.append(result)
 
-    print(output_path)
+    print('Generate done!')
     save_videos_from_pil(kps_results, output_path, fps=fps)
