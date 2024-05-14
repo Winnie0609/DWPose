@@ -21,22 +21,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     video_path = os.path.join(args.folder, "video.mp4")
+    fps = args.fps
 
+    print('[fps]', fps)
     if not os.path.exists(video_path):
         raise ValueError(f"Path: {args.video_path} not exists")
 
-    out_path = os.path.join(args.folder, "pose.mp4")
+    out_path = os.path.join(args.folder, f"pose_{fps}.mp4")
     detector = DWposeDetector()
 
-    # fps = get_fps(args.video_path)
-    # frames = read_frames(args.video_path)
-    # fps = get_fps(video_path)
-    fps = args.fps
-    frames = read_frames(video_path)
-    
-    print('[fps]', fps)
+    frames = read_frames(video_path)    
     print('[frames]', frames)
-
     slice_frame = int(fps*4)
     kps_results = []
     for i, frame_pil in enumerate(frames):
