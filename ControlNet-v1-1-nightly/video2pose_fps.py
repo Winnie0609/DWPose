@@ -9,7 +9,7 @@ from utils import get_fps, read_frames, save_videos_from_pil
 import numpy as np
 from annotator.util import resize_image, HWC3
 from PIL import Image
-
+from moviepy.editor import VideoFileClip
 
 if __name__ == "__main__":
     import argparse
@@ -24,17 +24,15 @@ if __name__ == "__main__":
     video_path = os.path.join(args.folder, "video.mp4")
     fps = args.fps
 
-    print('[fps]', fps)
-    print('[args.folder]', args.folder)
     if not os.path.exists(video_path):
         raise ValueError(f"Path: {args.video_path} not exists")
 
-    out_path = os.path.join(args.folder, f"pose_{fps}.mp4")
+    out_path = os.path.join(args.folder, f"pose_fps_{fps}.mp4")
     detector = DWposeDetector()
 
+    orig_fps = get_fps(video_path)
     frames = read_frames(video_path)    
-    print('[frames]', frames)
-    slice_frame = int(fps*4)
+
     kps_results = []
     for i, frame_pil in enumerate(frames):
         frame_pil = np.array(frame_pil, dtype=np.uint8)
@@ -51,4 +49,13 @@ if __name__ == "__main__":
         kps_results.append(result)
 
     print(out_path)
-    save_videos_from_pil(kps_results, out_path, fps=fps)
+    save_videos_from_pil(kps_results, out_path, fps=orig_fps)
+
+    if (int(orig_fps) != fps):
+        clip = VideoFileClip(out_path)
+        new_clip = clip.set_fps(fps)
+        new_output_path = f"./pose_{fps}.mp4"
+        new_clip.write_videofile(new_output_path)
+        out_path = new_output_path
+
+    print(get_fps(out_path), out_path)
