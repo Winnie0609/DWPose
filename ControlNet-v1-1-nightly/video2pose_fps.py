@@ -5,7 +5,7 @@ from annotator.dwpose import DWposeDetector
 from pathlib import Path
 import cv2
 
-from utils import read_frames, save_videos_from_pil
+from utils import get_fps, read_frames, save_videos_from_pil
 import numpy as np
 from annotator.util import resize_image, HWC3
 from PIL import Image
@@ -16,23 +16,22 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--video_path", type=str)
-    parser.add_argument("--output_path", type=str)
-    parser.add_argument("--video_folder", type=str, help="Folder containing the video")
-    parser.add_argument("--fps", type=str, help="Specific fps")
+    parser.add_argument("--folder", type=str, help="Folder containing the video")
+    parser.add_argument("--fps", type=str, help="Folder containing the video")
     args = parser.parse_args()
 
-    fps = args.fps
     video_path = os.path.join(args.folder, "video.mp4")
-    output_path = args.output_path
+    fps = args.fps
 
+    print('[fps]', fps)
     if not os.path.exists(video_path):
         raise ValueError(f"Path: {args.video_path} not exists")
 
-    print('[fps]', fps)
-    print('[video_path]', video_path)
-    print('Start!')
+    out_path = os.path.join(args.folder, f"pose_{fps}.mp4")
     detector = DWposeDetector()
+
     frames = read_frames(video_path)    
+    print('[frames]', frames)
     slice_frame = int(fps*4)
     kps_results = []
     for i, frame_pil in enumerate(frames):
@@ -49,5 +48,5 @@ if __name__ == "__main__":
         result = Image.fromarray(result)
         kps_results.append(result)
 
-    print('Generate done!')
-    save_videos_from_pil(kps_results, output_path, fps=fps)
+    print(out_path)
+    save_videos_from_pil(kps_results, out_path, fps=fps)
