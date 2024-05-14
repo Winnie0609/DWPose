@@ -14,6 +14,7 @@ from PIL import Image
 if __name__ == "__main__":
     import argparse
 
+    print('start!')
     parser = argparse.ArgumentParser()
     parser.add_argument("--video_path", type=str)
     parser.add_argument("--folder", type=str, help="Folder containing the video")
@@ -24,6 +25,7 @@ if __name__ == "__main__":
     fps = args.fps
 
     print('[fps]', fps)
+    print('[args.folder]', args.folder)
     if not os.path.exists(video_path):
         raise ValueError(f"Path: {args.video_path} not exists")
 
