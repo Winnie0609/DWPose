@@ -1,9 +1,10 @@
 import os
 import sys
-sys.path.append('.')
 from annotator.dwpose import DWposeDetector
 from pathlib import Path
 import cv2
+
+sys.path.append('.')
 
 from utils import get_fps, read_frames, save_videos_from_pil
 import numpy as np
@@ -14,7 +15,6 @@ from moviepy.editor import VideoFileClip
 if __name__ == "__main__":
     import argparse
 
-    print('start!')
     parser = argparse.ArgumentParser()
     parser.add_argument("--video_path", type=str)
     parser.add_argument("--folder", type=str, help="Folder containing the video")
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     if (int(orig_fps) != fps):
         clip = VideoFileClip(out_path)
         new_clip = clip.set_fps(fps)
-        new_output_path = f"./pose_{fps}.mp4"
+        new_output_path = os.path.join(args.folder, f"pose_{fps}.mp4")
         new_clip.write_videofile(new_output_path)
         out_path = new_output_path
 
