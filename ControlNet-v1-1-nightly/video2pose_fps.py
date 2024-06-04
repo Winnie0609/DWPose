@@ -19,11 +19,11 @@ if __name__ == "__main__":
     parser.add_argument("--video_path", type=str)
     parser.add_argument("--folder", type=str, help="Folder containing the video")
     parser.add_argument("--fps", type=str, help="Fps of video")
-    parser.add_argument("--with_face", type=str, help="Motion with face")
+    parser.add_argument("--with_face", type=lambda x: (str(x).lower() == 'true'), help="Motion with face")
     args = parser.parse_args()
 
     video_path = os.path.join(args.folder, "video.mp4")
-    with_face = int(args.with_face)
+    with_face = args.with_face
     fps = int(args.fps)
 
     if not os.path.exists(video_path):
@@ -40,7 +40,7 @@ if __name__ == "__main__":
         frame_pil = np.array(frame_pil, dtype=np.uint8)
         frame_pil = HWC3(frame_pil)
         frame_pil = resize_image(frame_pil, 512)
-        result= detector(frame_pil, with_face=with_face)
+        result= detector(frame_pil, with_face)
         result = HWC3(result)
         img = resize_image(frame_pil, 512)
         H, W, C = img.shape
