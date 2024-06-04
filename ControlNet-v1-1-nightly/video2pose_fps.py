@@ -17,19 +17,20 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--video_path", type=str)
-    parser.add_argument("--folder", type=str, help="Folder containing the video")
+    parser.add_argument("--output_path", type=str)
+    # parser.add_argument("--folder", type=str, help="Folder containing the video")
     parser.add_argument("--fps", type=str, help="Fps of video")
     parser.add_argument("--with_face", type=lambda x: (str(x).lower() == 'true'), help="Motion with face")
     args = parser.parse_args()
 
-    video_path = os.path.join(args.folder, "video.mp4")
+    video_path = args.video_path
+    output_video_path = args.output_path
     with_face = args.with_face
     fps = int(args.fps)
 
     if not os.path.exists(video_path):
         raise ValueError(f"Path: {args.video_path} not exists")
 
-    out_path = os.path.join(args.folder, f"pose_fps_{fps}.mp4")
     detector = DWposeDetector()
 
     orig_fps = get_fps(video_path)
@@ -50,14 +51,11 @@ if __name__ == "__main__":
         result = Image.fromarray(result)
         kps_results.append(result)
 
-    print(out_path)
-    save_videos_from_pil(kps_results, out_path, fps=orig_fps)
+    print(output_video_path)
+    save_videos_from_pil(kps_results, output_video_path, fps=orig_fps)
 
     if (int(orig_fps) != fps):
-        clip = VideoFileClip(out_path)
+        clip = VideoFileClip(output_video_path)
         new_clip = clip.set_fps(fps)
-        new_output_path = os.path.join(args.folder, f"pose_{fps}.mp4")
-        new_clip.write_videofile(new_output_path)
-        out_path = new_output_path
 
-    print(get_fps(out_path), out_path)
+    print(get_fps(output_video_path), output_video_path)
