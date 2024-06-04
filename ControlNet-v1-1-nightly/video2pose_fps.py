@@ -57,5 +57,6 @@ if __name__ == "__main__":
     if (int(orig_fps) != fps):
         clip = VideoFileClip(output_video_path)
         new_clip = clip.set_fps(fps)
+        new_clip.write_videofile(output_video_path)
 
     print(get_fps(output_video_path), output_video_path)
