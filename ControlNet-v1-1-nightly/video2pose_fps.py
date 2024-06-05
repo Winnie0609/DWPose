@@ -51,12 +51,18 @@ if __name__ == "__main__":
         result = Image.fromarray(result)
         kps_results.append(result)
 
-    print(output_video_path)
-    save_videos_from_pil(kps_results, output_video_path, fps=orig_fps)
+    temp_output_path = os.path.join('/content/', "temp.mp4")
+    
+    print('[temp_ouput_path]', temp_output_path)
+    save_videos_from_pil(kps_results, temp_output_path, fps=orig_fps)
 
     if (int(orig_fps) != fps):
-        clip = VideoFileClip(output_video_path)
+        clip = VideoFileClip(temp_output_path)
         new_clip = clip.set_fps(fps)
-        new_clip.write_videofile(output_video_path)
 
-    print(get_fps(output_video_path), output_video_path)
+        new_output_path = temp_output_path
+        # new_output_path = 'content/temp.mp4'
+        new_clip.write_videofile(new_output_path)
+        out_path = new_output_path
+
+    print(get_fps(new_output_path), new_output_path)
